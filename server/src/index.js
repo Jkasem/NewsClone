@@ -1,22 +1,45 @@
-const { GraphQLServer } = require('graphql-yoga')
+const { GraphQLServer } = require("graphql-yoga");
 
-// 1
+// Dummy data
+let links = [
+  {
+    id: "link-0",
+    url: "www.justinkaseman.com",
+    description: "Justin Kaseman's personal website",
+  },
+];
+
+// Schema
 const typeDefs = `
 type Query {
     info: String!
-}`
-
-//2 
-const resolvers = {
-    Query: {
-        info: () => `This is the API of Hackersnews Clone`
-    }
+    feed: [Link!]!
 }
 
-//3 
-const server = new GraphQLServer({
-    typeDefs,
-    resolvers,
-})
+type Link {
+    id: ID!
+    description: String!
+    url: String!
+}
+`;
 
-server.start(() => console.log(`Server running on port 4000`))
+// Resolvers
+const resolvers = {
+  Query: {
+    info: () => `This is the API of a HackerNews clone`,
+    feed: () => links,
+  },
+  Link: {
+    id: root => root.id,
+    description: root => root.description,
+    url: root => root.url,
+  },
+};
+
+// Server
+const server = new GraphQLServer({
+  typeDefs,
+  resolvers,
+});
+
+server.start(() => console.log(`Server running on port 4000`));

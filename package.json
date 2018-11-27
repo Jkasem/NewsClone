@@ -6,6 +6,9 @@
   "author": "Justin Kaseman <justinkaseman@live.com>",
   "license": "MIT",
   "scripts": {
-    "start-server": "node server/src/index.js"
+    "start-server": "nodemon server/src/index.js"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.7"
   }
 }
