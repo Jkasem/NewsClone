@@ -6,3 +6,8 @@ secret:
 
 # The HTTP endpoint for your Prisma API
 endpoint: https://us1.prisma.sh/justin-kaseman-9b6280/newsclone/dev
+
+# Deploy hook
+hooks:
+  post-deploy:
+    - graphql get-schema --project database

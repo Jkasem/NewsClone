@@ -1,31 +1,26 @@
 const { GraphQLServer } = require("graphql-yoga");
+const { Prisma } = require("prisma-binding");
 
-// Dummy data
-let links = [
-  {
-    id: "link-0",
-    url: "www.justinkaseman.com",
-    description: "Justin Kaseman's personal website",
-  },
-];
-
-let idCount = links.length;
 // Resolvers
 const resolvers = {
   Query: {
     info: () => `This is the API of a HackerNews clone`,
     feed: () => links,
-    link: (root, args) => root,
+    link: (root, args, context, info) => {
+      return context.db.query.links({}, info);
+    },
   },
   Mutation: {
-    postLink: (root, args) => {
-      const link = {
-        id: `link-${idCount++}`,
-        description: args.description,
-        url: args.url,
-      };
-      links.push(link);
-      return link;
+    postLink: (root, args, context, info) => {
+      return context.db.mutation.createLink(
+        {
+          data: {
+            url: args.url,
+            descriptions: args.description,
+          },
+        },
+        info
+      );
     },
     updateLink: (root, args) => {
       const index = links.indexOf(links.reduce(link => link.id === args.id));
@@ -47,6 +42,15 @@ const resolvers = {
 const server = new GraphQLServer({
   typeDefs: `server/src/schema.graphql`,
   resolvers,
+  context: req => ({
+    ...req,
+    db: new Prisma({
+      typeDefs: "server/src/generated/prisma.graphql",
+      endpoint: "https://us1.prisma.sh/justin-kaseman-9b6280/newsclone/dev",
+      secret: process.env.prisma_secret,
+      debug: true,
+    }),
+  }),
 });
 
 server.start(() => console.log(`Server running on port 4000`));
