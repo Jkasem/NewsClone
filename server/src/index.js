@@ -1,41 +1,16 @@
+require("dotenv").config();
 const { GraphQLServer } = require("graphql-yoga");
 const { Prisma } = require("prisma-binding");
 
+const Query = require("./resolvers/Query");
+const Mutation = require("./resolvers/Mutation");
+const AuthPayload = require("./resolvers/AuthPayload");
+
 // Resolvers
 const resolvers = {
-  Query: {
-    info: () => `This is the API of a HackerNews clone`,
-    feed: () => links,
-    link: (root, args, context, info) => {
-      return context.db.query.links({}, info);
-    },
-  },
-  Mutation: {
-    postLink: (root, args, context, info) => {
-      return context.db.mutation.createLink(
-        {
-          data: {
-            url: args.url,
-            descriptions: args.description,
-          },
-        },
-        info
-      );
-    },
-    updateLink: (root, args) => {
-      const index = links.indexOf(links.reduce(link => link.id === args.id));
-      let linkToUpdate = links[index];
-      if (args.id) linkToUpdate.id = args.id;
-      if (args.description) linkToUpdate.description = args.description;
-      return linkToUpdate;
-    },
-    deleteLink: (root, args) => {
-      const index = links.indexOf(links.reduce(link => link.id === args.id));
-      const output = links[index];
-      links.splice(index, 1);
-      return output;
-    },
-  },
+  Query,
+  Mutation,
+  AuthPayload,
 };
 
 // Server
