@@ -1,5 +1,5 @@
 const info = () => `This is the API of a HackerNews clone`;
-const feed = (root, args, context, info) => {
+const feed = async (root, args, context, info) => {
   const where = args.filter
     ? {
         OR: [
@@ -9,10 +9,28 @@ const feed = (root, args, context, info) => {
       }
     : {};
 
-  return context.db.query.links(
+  const queriedLinks = await context.db.query.links(
     { where, skip: args.skip, first: args.first, orderBy: args.orderBy },
-    info
+    `{ id }`
   );
+
+  const countSelectionSet = `
+  {
+    aggregate {
+        count
+    }
+  }
+  `;
+
+  const linksConnection = await context.db.query.linksConnection(
+    {},
+    countSelectionSet
+  );
+
+  return {
+    count: linksConnection.aggregate.count,
+    linkId: queriedLinks.map(link => link.id),
+  };
 };
 
 module.exports = {
