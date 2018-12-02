@@ -56,6 +56,28 @@ function postLink(root, args, context, info) {
   );
 }
 
+async function vote(root, args, context, info) {
+  const userId = getUserId(context);
+
+  const linkExists = await context.db.exists.Vote({
+    user: { id: userId },
+    link: { id: args.linkId },
+  });
+  if (linkExists) {
+    throw new Error(`Already voted for link: ${args.linkId}`);
+  }
+
+  return context.db.mutation.createVote(
+    {
+      data: {
+        user: { connect: { id: userId } },
+        link: { connect: { id: args.linkId } },
+      },
+    },
+    info
+  );
+}
+
 // function updateLink(root, args) {
 //   const index = links.indexOf(links.reduce(link => link.id === args.id));
 //   let linkToUpdate = links[index];
@@ -75,6 +97,7 @@ module.exports = {
   signup,
   login,
   postLink,
+  vote,
   //   updateLink,
   //   deleteLink,
 };
