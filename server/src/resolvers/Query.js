@@ -1,5 +1,16 @@
 const info = () => `This is the API of a HackerNews clone`;
-const feed = (root, args, context, info) => context.db.query.links({}, info);
+const feed = (root, args, context, info) => {
+  const where = args.filter
+    ? {
+        OR: [
+          { url_contains: args.filter },
+          { description_contains: args.filter },
+        ],
+      }
+    : {};
+
+  return context.db.query.links({ where }, info);
+};
 
 module.exports = {
   info,
