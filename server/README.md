@@ -1,12 +1,15 @@
-GraphQL-yoga features:
+## Back-End stack:
 
-- GraphQL spec-compliant
-- Supports file upload
-- Realtime functionality with GraphQL subscriptions
-- Works with TypeScript typings
-- Out-of-the-box support for GraphQL Playground
-- Extensible via Express middlewares
-- Resolves custom directives in your GraphQL schema
-- Query performance tracing
-- Accepts both application/json and application/graphql content-types
-- Runs everywhere: Can be deployed via now, up, AWS Lambda, Heroku etc.
+- Node.js, GraphQL-yoga, Prisma, prisma-binding
+
+### GraphQL-yoga:
+
+- Fast and simple GraphQL server built with express.
+
+### Prisma:
+
+- Flexible GraphQL query engine that turns a database into a GraphQL API
+
+### Prisma-binding:
+
+- Held together using https://github.com/prisma/prisma-binding
