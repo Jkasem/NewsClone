@@ -3,8 +3,8 @@ import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
 
 const POST_MUTATION = gql`
-  mutation PostMutation($description: String!, $url: String!) {
-    post(description: $description, url: $url) {
+  mutation PostLinkMutation($description: String!, $url: String!) {
+    postLink(description: $description, url: $url) {
       id
       createdAt
       url
